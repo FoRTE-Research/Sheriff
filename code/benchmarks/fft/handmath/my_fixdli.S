@@ -1,0 +1,91 @@
+  .file "my_fixdli.c"
+
+.text
+  .global my_fixdli
+  .section .secure_code,"ax",@progbits
+  .balign 2
+  .global my_fixdli
+  .type my_fixdli, @function
+my_fixdli:
+PUSHM.A	#4,	R10	;20-BIT WORDS
+.DL0:
+SUBA	#22,	R1	;0X00016
+.DL1:
+MOV	R12,	0(R1)	;
+MOV	R13,	2(R1)	;
+MOV	R14,	4(R1)	;
+MOV	R15,	6(R1)	;
+.DL2:
+MOVA	R1,	R13	;
+ADDA	#8,	R13	;
+MOVA	R1,	R12	;
+.DL3:
+CALLA	#my_unpack_d		;0X1549E
+.DL4:
+MOV	8(R1),	R14	;
+.DL5:
+CLR.B	R12		;
+CLR.B	R13		;
+.DL6:
+MOV.B	#2,	R15	;R3 AS==10
+CMP	R14,	R15	;
+JC	.DL17     	;ABS 0X14B5E
+.DL7:
+CMP	#4,	R14	;R2 AS==10
+JNZ	.DL10     	;ABS 0X14B3C
+.DL8:
+MOV	#-1,	R12	;R3 AS==11
+MOV	#32767,	R13	;#0X7FFF
+CMP	#0,	10(R1)	;R3 AS==00, 0X000A
+JZ	.DL17     	;ABS 0X14B5E
+.DL9:
+CLR.B	R12		;
+MOV	#-32768,R13	;#0X8000
+JMP .DL17
+.DL10:
+MOV	12(R1),	R14	;0X0000C
+.DL11:
+CLR.B	R12		;
+CLR.B	R13		;
+.DL12:
+CMP	#0,	R14	;R3 AS==00
+JL	.DL17     	;ABS 0X14B5E
+.DL13:
+MOV	10(R1),	R7	;0X0000A
+.DL14:
+MOV.B	#30,	R12	;#0X001E
+CMP	R14,	R12	;
+JGE	.DL20     	;ABS 0X14B66
+.DL15:
+MOV	#-1,	R12	;R3 AS==11
+MOV	#32767,	R13	;#0X7FFF
+.DL16:
+CMP	#0,	R7	;R3 AS==00
+JNZ	.DL9     	;ABS 0X14B32
+.DL17:
+ADDA	#22,	R1	;0X00016
+.DL18:
+POPM.A	#4,	R10	;20-BIT WORDS
+.DL19:
+RETA			;
+.DL20:
+MOV	14(R1),	R8	;0X0000E
+MOV	16(R1),	R9	;0X00010
+MOV	18(R1),	R10	;0X00012
+MOV	20(R1),	R11	;0X00014
+MOV	#60,	R12	;#0X003C
+SUB	R14,	R12	;
+CALLA	#my_srlll		;0X14F40
+.DL21:
+CMP	#0,	R7	;R3 AS==00
+JZ	.DL17     	;ABS 0X14B5E
+.DL22:
+CLR.B	R14		;
+CLR.B	R15		;
+SUB	R12,	R14	;
+SUBC	R13,	R15	;
+MOV	R14,	R12	;
+.DL23:
+MOV	R15,	R13	;
+JMP .DL17;
+.size my_fixdli, .-my_fixdli

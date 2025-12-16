@@ -1,0 +1,167 @@
+  .file "my_unpack_d.c"
+
+.text
+  .global my_unpack_d
+  .section .secure_code,"ax",@progbits
+  .balign 2
+  .global my_unpack_d
+  .type my_unpack_d, @function
+my_unpack_d:
+PUSHM.A	#7,	R10	;20-BIT WORDS
+.DL0:
+MOVA	R13,	R6	;
+.DL1:
+MOV	@R12,	R8	;
+MOV	2(R12),	R9	;
+MOV	4(R12),	R10	;
+MOV.B	6(R12),	R5	;
+MOV	R5,	R11	;
+AND.B	#15,	R11	;#0X000F
+.DL2:
+MOV	R8,	R7	;
+MOV	R9,	R15	;
+MOV	R10,	R14	;
+.DL3:
+MOV	6(R12),	R13	;
+.DL4:
+RRUM	#4,	R13	;
+AND	#2047,	R13	;#0X07FF
+.DL5:
+MOV.B	7(R12),	R12	;
+.DL6:
+RPT #7 { RRUX.W	R12		;
+.DL7:
+MOV	R12,	2(R6)	;
+.DL8:
+CMP	#0,	R13	;R3 AS==00
+JNZ	.DL30    	;ABS 0XEB94
+.DL9:
+MOV	R8,	R12	;
+BIS	R9,	R12	;
+BIS	R10,	R12	;
+BIS	R11,	R12	;
+CMP	#0,	R12	;R3 AS==00
+JNZ	.DL13     	;ABS 0XEB18
+.DL10:
+MOV	#2,	0(R6)	;R3 AS==10
+.DL11:
+POPM.A	#7,	R10	;20-BIT WORDS
+.DL12:
+RETA			;
+.DL13:
+MOV.B	#8,	R12	;R2 AS==11
+CALLA	#my_sllll ;0X0F98A
+.DL14:
+MOV	R12,	R9	;
+.DL15:
+MOV	#3,	0(R6)	;
+.DL16:
+MOV	#-1023,	R5	;#0XFC01
+.DL17:
+MOV	R9,	R7	;
+RLAM	#1,	R7	;
+MOV.B	#1,	R10	;R3 AS==01
+CMP	R9,	R7	;
+JNC	.DL18      	;ABS 0XEB36
+CLR.B	R10		;
+.DL18:
+MOV	R13,	R9	;
+.DL19:
+RLAM	#1,	R9	;
+MOV.B	#1,	R12	;R3 AS==01
+CMP	R13,	R9	;
+JNC	.DL20      	;ABS 0XEB42
+CLR.B	R12		;
+.DL20:
+ADD	R9,	R10	;
+MOV.B	#1,	R13	;R3 AS==01
+CMP	R9,	R10	;
+JNC	.DL21      	;ABS 0XEB4C
+CLR.B	R13		;
+.DL21:
+BIS	R13,	R12	;
+MOV	R14,	R13	;
+RLAM	#1,	R13	;
+MOV.B	#1,	R8	;R3 AS==01
+CMP	R14,	R13	;
+JNC	.DL22      	;ABS 0XEB5A
+CLR.B	R8		;
+.DL22:
+ADD	R13,	R12	;
+MOV.B	#1,	R14	;R3 AS==01
+CMP	R13,	R12	;
+JNC	.DL23      	;ABS 0XEB64
+CLR.B	R14		;
+.DL23:
+BIS	R14,	R8	;
+RLAM	#1,	R15	;
+MOV	R7,	R9	;
+MOV	R10,	R13	;
+MOV	R12,	R14	;
+ADD	R8,	R15	;
+.DL24:
+MOV	R5,	R8	;
+.DL25:
+ADD	#-1,	R5	;R3 AS==11
+MOV	#4095,	R4	;#0X0FFF
+CMP	R15,	R4	;
+JC	.DL17     	;ABS 0XEB2A
+.DL26:
+MOV	R8,	4(R6)	;
+.DL27:
+MOV	R7,	6(R6)	;
+MOV	R10,	8(R6)	;
+MOV	R12,	10(R6)	; 0X000A
+.DL28:
+MOV	R15,	12(R6)	; 0X000C
+.DL29:
+JMP .DL11
+.DL30:
+CMP	#2047,	R13	;#0X07FF
+JNZ	.DL38     	;ABS 0XEBE0
+.DL31:
+BIS	R9,	R8	;
+BIS	R10,	R8	;
+BIS	R11,	R8	;
+CMP	#0,	R8	;R3 AS==00
+JNZ	.DL33     	;ABS 0XEBAC
+.DL32:
+MOV	#4,	0(R6)	;R2 AS==10
+JMP .DL11
+.DL33:
+BIT	#8,	R5	;R2 AS==11
+JZ	.DL37     	;ABS 0XEBD8
+.DL34:
+MOV	#1,	0(R6)	;R3 AS==01
+.DL35:
+MOV	R7,	R8	;
+MOV	R15,	R9	;
+MOV	R14,	R10	;
+MOV.B	#8,	R12	;R2 AS==11
+CALLA	#my_sllll ;0X0F98A
+.DL36:
+AND	#-256,	R12	;#0XFF00
+MOV	R12,	6(R6)	;
+MOV	R13,	8(R6)	;
+MOV	R14,	10(R6)	; 0X000A
+AND	#-2049,	R15	;#0XF7FF
+JMP .DL28
+.DL37:
+MOV	#0,	0(R6)	;R3 AS==00
+JMP .DL35
+.DL38:
+ADD	#-1023,	R13	;#0XFC01
+.DL39:
+MOV	R13,	4(R6)	;
+.DL40:
+MOV	#3,	0(R6)	;
+.DL41:
+MOV.B	#8,	R12	;R2 AS==11
+CALLA	#my_sllll ;0X0F98A
+.DL42:
+MOV	R12,	6(R6)	;
+MOV	R13,	8(R6)	;
+MOV	R14,	10(R6)	; 0X000A
+BIS	#4096,	R15	;#0X1000
+JMP .DL28;
+.size my_unpack_d, .-my_unpack_d
